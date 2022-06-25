@@ -28,10 +28,8 @@ int SnakeBody::getY() const
 bool SnakeBody::operator == (const SnakeBody& snakeBody)
 {
 		// TODO overload the == operator for SnakeBody comparision.
-
-
-
-
+    if (mX == snakeBody.getX() && mY == snakeBody.getY())
+        return true;
     return false;
 }
 
@@ -64,13 +62,10 @@ void Snake::initializeSnake()
 bool Snake::isPartOfSnake(int x, int y)
 {
 		// TODO check if a given point with axis x, y is on the body of the snake.
-
-
-
-
-
-
-
+    for (int i = 0; i < getLength(); i++){
+        if (x == mSnake[i].getX() && y == mSnake[i].getY())
+            return true;
+    }
     return false;
 }
 
@@ -217,7 +212,6 @@ bool Snake::moveFoward()
 		 * move the snake forward. 
      * If eat food, return true, otherwise return false
      */
-
 
 
 
