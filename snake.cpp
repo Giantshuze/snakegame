@@ -91,7 +91,7 @@ bool Snake::hitWall()
 bool Snake::hitSelf()
 {
 		// TODO check if the snake has hit itself.
-
+        
     
 
 
@@ -183,6 +183,9 @@ bool Snake::changeDirection(Direction newDirection)
     return false;
 }
 
+SnakeBody Snake::getHead(){
+    return mSnake[0];
+}
 
 SnakeBody Snake::createNewHead()
 {
@@ -216,10 +219,15 @@ bool Snake::moveFoward()
 
 
 
-
-
-
-    return false;
+    //Create a new head and return whether a food is got
+    if (this->touchFood()){
+        return true;
+    }
+    else{
+        //Pop the last SnakeBody(tail)
+        this->mSnake.pop_back();
+        return false;
+    }
 }
 
 bool Snake::checkCollision()

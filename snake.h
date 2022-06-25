@@ -46,6 +46,7 @@ public:
     bool changeDirection(Direction newDirection);
     std::vector<SnakeBody>& getSnake();
     int getLength();
+    SnakeBody getHead();
     SnakeBody createNewHead();
     bool moveFoward();
 
@@ -56,6 +57,7 @@ private:
     const int mInitialSnakeLength;
     Direction mDirection;
     SnakeBody mFood;
+    //mSnake[0] is head
     std::vector<SnakeBody> mSnake;
 };
 
