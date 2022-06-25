@@ -25,6 +25,14 @@ int SnakeBody::getY() const
     return mY;
 }
 
+void SnakeBody::setX(int x){
+    mX = x;
+}
+
+void SnakeBody::setY(int y){
+    mY = y;
+}
+
 bool SnakeBody::operator == (const SnakeBody& snakeBody)
 {
 		// TODO overload the == operator for SnakeBody comparision.
@@ -195,11 +203,33 @@ SnakeBody Snake::createNewHead()
 		 * add the new head according to the direction
 		 * return the new snake
 		 */
+    int nowHeadx, nowHeady;
+    nowHeadx = getHead().getX();
+    nowHeady = getHead().getY();
+    SnakeBody forwardHead(nowHeadx, nowHeady);
+    switch (mDirection)
+    {
+    case Direction::Up:
+        forwardHead.setY(nowHeady - 1);
+        break;
+    
+    case Direction::Down:
+        forwardHead.setY(nowHeady + 1);
+        break;
 
+    case Direction::Left:
+        forwardHead.setX(nowHeadx - 1);
+        break;
 
+    case Direction::Right:
+        forwardHead.setX(nowHeadx + 1);
+        break;
 
-
-
+    default:
+        SnakeBody forwardHead(nowHeadx, nowHeady);
+        break;
+    }
+    mSnake.emplace(mSnake.begin(), forwardHead);
 
     SnakeBody newHead = this->mSnake[0];
     return newHead;
