@@ -7,7 +7,7 @@
 #include <thread>
 
 #include <fstream>
-#include <algorithm> 
+#include <algorithm>
 
 #include "myrandom.h"
 
@@ -41,6 +41,7 @@ Game::Game()
 
 Game::~Game()
 {
+    mPtrSnake.~unique_ptr();
     for (int i = 0; i < this->mWindows.size(); i ++)
     {
         delwin(this->mWindows[i]);
@@ -211,7 +212,7 @@ void Game::renderDifficulty() const
 void Game::initializeGame()
 {
     // allocate memory for a new snake
-		this->mPtrSnake.reset(new Snake(this->mGameBoardWidth, this->mGameBoardHeight, this->mInitialSnakeLength));
+	this->mPtrSnake.reset(new Snake(this->mGameBoardWidth, this->mGameBoardHeight, this->mInitialSnakeLength));
 
     /* TODO 
      * initialize the game pionts as zero
@@ -219,6 +220,10 @@ void Game::initializeGame()
      * make the snake aware of the food
      * other initializations
      */
+    this->mPoints = 0;
+    this->mDifficulty = 0;
+    this->mDelay = mBaseDelay;
+    this->createRandomFood();
 }
 
 void Game::createRandomFood()
@@ -227,6 +232,27 @@ void Game::createRandomFood()
  * create a food at random places
  * make sure that the food doesn't overlap with the snake.
  */
+    int maxTable = mGameBoardHeight * mGameBoardWidth - this->mPtrSnake->getLength();
+    int foodPosition = myrandom(0, maxTable);
+    int foodX = 1;
+    int foodY = 1;
+    for (int i = 0; i < foodPosition; i++){
+        while (this->mPtrSnake->isPartOfSnake(foodX, foodY)){
+            foodX++;
+            if (foodX == mGameBoardWidth - 1){
+                foodX = 1;
+                foodY++;
+            }
+        }
+        foodX++;
+        if (foodX == mGameBoardWidth - 1){
+            foodX = 1;
+            foodY++;
+        }
+    }
+    mFood.setX(foodX);
+    mFood.setY(foodY);
+    this->mPtrSnake->senseFood(mFood);
 }
 
 void Game::renderFood() const
@@ -322,7 +348,7 @@ void Game::adjustDelay()
     this->mDifficulty = this->mPoints / 5;
     if (mPoints % 5 == 0)
     {
-        this->mDelay = this->mBaseDelay * pow(0.75, 1 + this->mDifficulty);
+        this->mDelay = this->mBaseDelay * pow(0.75, this->mDifficulty);
     }
 }
 
@@ -348,24 +374,25 @@ void Game::runGame()
         wclear(this->mWindows[1]);
         box(mWindows[1], 0, 0);
         bool eatOrNot = this->mPtrSnake->moveFoward();
-        bool dieOrNot = this->mPtrSnake->hitSelf() || this->mPtrSnake->hitWall();
+        bool dieOrNot = this->mPtrSnake->checkCollision();
         if (eatOrNot){
             this->mPoints++;
             this->createRandomFood();
         }
         if (dieOrNot){
-            this->renderRestartMenu();
+            if (this->renderRestartMenu()){
+                this->initializeGame();
+            }
+            else{
+                return;
+            };
         }
 
         this->renderPoints();
         this->renderDifficulty();
+        this->renderFood();
 		this->renderSnake();
 
-        
-
-
-
-        
         this->adjustDelay();
 		std::this_thread::sleep_for(std::chrono::milliseconds(this->mDelay));
 
@@ -446,11 +473,3 @@ bool Game::writeLeaderBoard()
     fhand.close();
     return true;
 }
-
-
-
-
-
-
-
-

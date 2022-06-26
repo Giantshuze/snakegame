@@ -68,7 +68,7 @@ private:
     const char mFoodSymbol = '#';
     int mPoints = 0;
     int mDifficulty = 0;
-    int mBaseDelay = 500;
+    int mBaseDelay = 300;
     int mDelay;
     const std::string mRecordBoardFilePath = "record.dat";
     std::vector<int> mLeaderBoard;
