@@ -99,14 +99,13 @@ bool Snake::hitWall()
 bool Snake::hitSelf()
 {
 		// TODO check if the snake has hit itself.
-        
-    
-
-
-
-
-
-		return false;
+    SnakeBody H = getHead();
+    for (int i = 1; i < getLength(); i++){
+        if (H == mSnake[i]){
+            return true;
+        }
+    }
+	return false;
 }
 
 

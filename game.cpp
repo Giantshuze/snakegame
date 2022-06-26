@@ -9,6 +9,8 @@
 #include <fstream>
 #include <algorithm> 
 
+#include "myrandom.h"
+
 #include "game.h"
 
 Game::Game()
@@ -56,7 +58,7 @@ void Game::createInformationBoard()
 void Game::renderInformationBoard() const
 {
     mvwprintw(this->mWindows[0], 1, 1, "Welcome to The Snake Game!");
-    mvwprintw(this->mWindows[0], 2, 1, "This is a mock version.");
+    mvwprintw(this->mWindows[0], 2, 1, "This is version 0.0.4.");
     mvwprintw(this->mWindows[0], 3, 1, "Please fill in the blanks to make it work properly!!");
     mvwprintw(this->mWindows[0], 4, 1, "Implemented using C++ and libncurses library.");
     wrefresh(this->mWindows[0]);
@@ -219,7 +221,7 @@ void Game::initializeGame()
      */
 }
 
-void Game::createRamdonFood()
+void Game::createRandomFood()
 {
 /* TODO 
  * create a food at random places
@@ -258,13 +260,6 @@ void Game::controlSnake() const
             this->mPtrSnake->changeDirection(Direction::Up);
 
 
-
-
-
-
-
-
-
             break;
         }
         case 'S':
@@ -272,14 +267,7 @@ void Game::controlSnake() const
         case KEY_DOWN:
         {
 				    // TODO change the direction of the snake.
-
-
-
-
-
-
-
-
+            this->mPtrSnake->changeDirection(Direction::Down);
 
 
             break;
@@ -289,14 +277,7 @@ void Game::controlSnake() const
         case KEY_LEFT:
         {
 				    // TODO change the direction of the snake.
-
-
-
-
-
-
-
-
+            this->mPtrSnake->changeDirection(Direction::Left);
 
 
             break;
@@ -306,14 +287,7 @@ void Game::controlSnake() const
         case KEY_RIGHT:
         {
 				    // TODO change the direction of the snake.
-
-
-
-
-
-
-
-
+            this->mPtrSnake->changeDirection(Direction::Right);
 
 
             break;
@@ -348,7 +322,7 @@ void Game::adjustDelay()
     this->mDifficulty = this->mPoints / 5;
     if (mPoints % 5 == 0)
     {
-        this->mDelay = this->mBaseDelay * pow(0.75, this->mDifficulty);
+        this->mDelay = this->mBaseDelay * pow(0.75, 1 + this->mDifficulty);
     }
 }
 
@@ -371,21 +345,29 @@ void Game::runGame()
 				 *   8. update other game states and refresh the window
 				 */
         this->controlSnake();
+        wclear(this->mWindows[1]);
+        box(mWindows[1], 0, 0);
+        bool eatOrNot = this->mPtrSnake->moveFoward();
+        bool dieOrNot = this->mPtrSnake->hitSelf() || this->mPtrSnake->hitWall();
+        if (eatOrNot){
+            this->mPoints++;
+            this->createRandomFood();
+        }
+        if (dieOrNot){
+            this->renderRestartMenu();
+        }
+
+        this->renderPoints();
+        this->renderDifficulty();
+		this->renderSnake();
+
         
 
 
-				
-
-
-				this->renderSnake();
 
         
-
-
-
-
-
-				std::this_thread::sleep_for(std::chrono::milliseconds(this->mDelay));
+        this->adjustDelay();
+		std::this_thread::sleep_for(std::chrono::milliseconds(this->mDelay));
 
         refresh();
     }

@@ -38,7 +38,7 @@ public:
     void renderPoints() const;
     void renderDifficulty() const;
     
-		void createRamdonFood();
+		void createRandomFood();
     void renderFood() const;
     void renderSnake() const;
     void controlSnake() const;
@@ -68,7 +68,7 @@ private:
     const char mFoodSymbol = '#';
     int mPoints = 0;
     int mDifficulty = 0;
-    int mBaseDelay = 100;
+    int mBaseDelay = 500;
     int mDelay;
     const std::string mRecordBoardFilePath = "record.dat";
     std::vector<int> mLeaderBoard;
