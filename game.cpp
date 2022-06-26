@@ -255,7 +255,7 @@ void Game::controlSnake() const
         case KEY_UP:
         {
 				    // TODO change the direction of the snake.
-
+            this->mPtrSnake->changeDirection(Direction::Up);
 
 
 

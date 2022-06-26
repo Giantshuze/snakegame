@@ -141,54 +141,60 @@ bool Snake::changeDirection(Direction newDirection)
         {
 						// what you need to do when the current direction of the snake is Up
 						// and the user inputs a new direction?  TODO
-
-
-
-
-
-
+            if (newDirection != Direction::Down){
+                mDirection = newDirection;
+                break;
+            }
+            else{
+                break;
+            }
 
         }
         case Direction::Down:
         {
 						// what you need to do when the current direction of the snake is Down
 						// and the user inputs a new direction? TODO
-
-
-
-
-
-
+            if (newDirection != Direction::Up){
+                mDirection = newDirection;
+                break;
+            }
+            else{
+                break;
+            }
 
         }
         case Direction::Left:
         {
 						// what you need to do when the current direction of the snake is Left
 						// and the user inputs a new direction? TODO
-
-
-
-
-
-
+            if (newDirection != Direction::Right){
+                mDirection = newDirection;
+                break;
+            }
+            else{
+                break;
+            }
 
         }
         case Direction::Right:
         {
 						// what you need to do when the current direction of the snake is Right
 						// and the user inputs a new direction? TODO
-
-
-
-
-
-
-
-            
+        if (newDirection != Direction::Left){
+                mDirection = newDirection;
+                break;
+            }
+            else{
+                break;
+            }
+        
+        default:
+        //Unexpected ERROR
+            return false;
         }
     }
 
-    return false;
+    return true;
 }
 
 SnakeBody Snake::getHead(){
